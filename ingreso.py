@@ -6,7 +6,17 @@ def mostrar_formulario():
 
     # Materiales
     mat1 = st.number_input("MAT 1 (%)", value=60.0)
-    vel_motor_a = st.number_input("Velocidad Motor A (Hz)", value=65.0)
+    mat2 = st.number_input("MAT 2 (%)", value=38.0)
+    mat3 = st.number_input("MAT 2 (%)", value=2.0)
+
+    # Motores
+    vel_motor_a = st.number_input("Velocidad Motor A (Hz)", value=0.0)
+    vel_motor_b = st.number_input("Velocidad Motor B (Hz)", value=0.0)
+    vel_alimentador = st.number_input("Velocidad alimentador (Hz)", value=0.0)
+
+    # Gases
+    co2 = st.number_input("CO2 (kg/h)", value=0.0)
+    eth = st.number_input("ETH (kg/h)", value=0.0)
 
     # Temperaturas Extrusora A
     z1 = st.number_input("Temperatura Z-1 (°C)", value=0.0)
@@ -34,6 +44,12 @@ def mostrar_formulario():
     otc_07 = st.number_input("OTC-07 (°C)", value=0.0)
     otc_08 = st.number_input("OTC-08 (°C)", value=0.0)
     otc_09 = st.number_input("OTC-09 (°C)", value=0.0)
+
+
+    # Amperes motores
+    amp_mot_a = st.number_input("Amperes motor A", value=0.0)
+    amp_mot_b = st.number_input("Amperes motor B", value=0.0)
+
     
     # Solo Lectura
     aceptada = st.selectbox("¿Placa OK?", ["SI", "NO"]) == "SI"
@@ -42,23 +58,29 @@ def mostrar_formulario():
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO extrusion_corridas (mat1, 
-                       velocidad_motor_a, 
+            INSERT INTO extrusion_corridas (mat1, mat2, mat3, 
+                       velocidad_motor_a, velocidad_motor_b, velocidad_alimentador,
+                       CO2, ETH, 
                        z1, z2, z3, z4, z5, z6, z7,
                        z8, z9, z10, z11, z12, z13, z14, 
                        otc_01, otc_02, otc_03, otc_04, otc_05, otc_06, otc_07, otc_08, otc_09,
+                       amp_mot_a, amp_mot_b, 
                        aceptada)
-            VALUES (%s, 
-                    %s, 
+            VALUES (%s, %s, %s, 
+                    %s, %s, %s, 
+                    %s, %s,
                     %s, %s, %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, %s, %s,%s, %s, 
+                    %s, %s, %s, %s, %s, %s, %s,%s, %s,
+                    %s, %s,  
                     %s)
-        """, (mat1, 
-              vel_motor_a, 
+        """, (mat1, mat2, mat3, 
+              vel_motor_a, vel_motor_b, vel_alimentador,
+              co2, eth, 
               z1, z2, z3, z4, z5, z6, z7,
               z8, z9, z10, z11, z12, z13, z14,
-              otc_01, otc_02, otc_03, otc_04, otc_05, otc_06, otc_07, otc_08, otc_09, 
+              otc_01, otc_02, otc_03, otc_04, otc_05, otc_06, otc_07, otc_08, otc_09,
+              amp_mot_a, amp_mot_b,  
               aceptada))
         conn.commit()
         conn.close()
